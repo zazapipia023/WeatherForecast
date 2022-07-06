@@ -43,65 +43,51 @@ public class Controller {
     @FXML
     void checkWeather(ActionEvent event) {
         String city = cityTextField.getText().trim();
+        cityTextField.clear();
         if(!city.equals("")) {
-            String output = getUrlContent("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7f3807d97d32ab879f38caec10cb787a&units=metric");
+            String output = WeatherForecastUtil.getUrlContent("https://api.openweathermap.org/data/2.5/weather?q="
+                    + city + "&appid=7f3807d97d32ab879f38caec10cb787a&units=metric");
             if(!output.isEmpty()) {
 
-                JSONObject object = new JSONObject(output);
+                String[] arr = WeatherForecastUtil.giveForecast(output);
 
                 cityLabel.setText(city.toUpperCase());
-                tempLabel.setText(object.getJSONObject("main").getDouble("temp") + "°C");
-                tempFeelsLabel.setText(object.getJSONObject("main").getDouble("feels_like") + "°C");
-                maxTempLabel.setText(object.getJSONObject("main").getDouble("temp_max") + "°C");
-                minTempLabel.setText(object.getJSONObject("main").getDouble("temp_min") + "°C");
-                pressureLabel.setText(String.valueOf(object.getJSONObject("main").getDouble("pressure")));
+                tempLabel.setText(arr[0]);
+                tempFeelsLabel.setText(arr[1]);
+                maxTempLabel.setText(arr[2]);
+                minTempLabel.setText(arr[3]);
+                pressureLabel.setText(arr[4]);
 
                 cityTextField.clear();
-                cityTextField.setPromptText("ENTER CITY");
+            } else {
+                cityTextField.setPromptText("CITY NOT FOUND!");
             }
         }
     }
 
     void checkWeather() {
         String city = cityTextField.getText().trim();
+        cityTextField.clear();
         if(!city.equals("")) {
-            String output = getUrlContent("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7f3807d97d32ab879f38caec10cb787a&units=metric");
+            String output = WeatherForecastUtil.getUrlContent("https://api.openweathermap.org/data/2.5/weather?q="
+                    + city + "&appid=7f3807d97d32ab879f38caec10cb787a&units=metric");
             if(!output.isEmpty()) {
 
-                JSONObject object = new JSONObject(output);
+                String[] arr = WeatherForecastUtil.giveForecast(output);
 
                 cityLabel.setText(city.toUpperCase());
-                tempLabel.setText(object.getJSONObject("main").getDouble("temp") + "°C");
-                tempFeelsLabel.setText(object.getJSONObject("main").getDouble("feels_like") + "°C");
-                maxTempLabel.setText(object.getJSONObject("main").getDouble("temp_max") + "°C");
-                minTempLabel.setText(object.getJSONObject("main").getDouble("temp_min") + "°C");
-                pressureLabel.setText(String.valueOf(object.getJSONObject("main").getDouble("pressure")));
+                tempLabel.setText(arr[0]);
+                tempFeelsLabel.setText(arr[1]);
+                maxTempLabel.setText(arr[2]);
+                minTempLabel.setText(arr[3]);
+                pressureLabel.setText(arr[4]);
 
                 cityTextField.clear();
-                cityTextField.setPromptText("ENTER CITY");
+            } else {
+                cityTextField.setPromptText("CITY NOT FOUND!");
             }
         }
         checkWeatherButton.requestFocus();
-    }
-
-    public String getUrlContent(String urlAdress) {
-        StringBuffer content = new StringBuffer();
-
-        try {
-            URL url = new URL(urlAdress);
-            URLConnection urlConnection = url.openConnection();
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String line;
-
-            while((line = bufferedReader.readLine()) != null) content.append(line + "\n");
-            bufferedReader.close();
-
-        } catch (Exception e) {
-            cityTextField.clear();
-            cityTextField.setPromptText("CITY NOT FOUND!");
-        }
-        return content.toString();
     }
 
     void onKeyPressed(KeyEvent keyEvent) {
